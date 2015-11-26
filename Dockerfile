@@ -2,27 +2,32 @@
 # s2i-clojure-centos7
 FROM openshift/base-centos7
 
-# TODO: Put the maintainer name in the image metadata
-# MAINTAINER Your Name <your@email.com>
+MAINTAINER Tobias Florek <tob@butter.sh>
 
 # TODO: Rename the builder environment variable to inform users about application you provide them
-# ENV BUILDER_VERSION 1.0
+ENV CLOJURE_VERSION 1.5.1
+ENV OPENJDK_VERSION 1.8.0
+ENV LEININGEN_INSTALLER_URL https://raw.github.com/technomancy/leiningen/stable/bin/lein
 
-# TODO: Set labels used in OpenShift to describe the builder image
-#LABEL io.k8s.description="Platform for building xyz" \
-#      io.k8s.display-name="builder x.y.z" \
-#      io.openshift.expose-services="8080:http" \
-#      io.openshift.tags="builder,x.y.z,etc."
+LABEL io.k8s.description="Platform for building clojure apps" \
+      io.k8s.display-name="clojure $CLOJURE_VERSION builder" \
+      io.openshift.expose-services="" \
+      io.openshift.tags="builder,clojure"
 
-# TODO: Install required packages here:
-# RUN yum install -y ... && yum clean all -y
+RUN yum install -y --setopt=tsflags=nodocs \
+        java-$OPENJDK_VERSION-openjdk-devel \
+	clojure-$CLOJURE_VERSION \
+        sudo \
+ && yum clean all -y \
+ && curl -Lo /usr/bin/lein $LEININGEN_INSTALLER_URL \
+ && chmod +x /usr/bin/lein \
+ && sudo -u 1001 'lein version'
 
 # TODO (optional): Copy the builder files into /opt/app-root
 # COPY ./<builder_folder>/ /opt/app-root/
 
 # TODO: Copy the S2I scripts to /usr/local/s2i, since openshift/base-centos7 image sets io.openshift.s2i.scripts-url label that way, or update that label
 # COPY ./.s2i/bin/ /usr/local/s2i
-
 # TODO: Drop the root user and make the content of /opt/app-root owned by user 1001
 # RUN chown -R 1001:1001 /opt/app-root
 
@@ -33,4 +38,4 @@ USER 1001
 # EXPOSE 8080
 
 # TODO: Set the default CMD for the image
-# CMD ["usage"]
+CMD ["usage"]
