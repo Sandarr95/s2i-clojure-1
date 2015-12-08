@@ -23,7 +23,6 @@ RUN yum install -y --setopt=tsflags=nodocs \
 # TODO (optional): Copy the builder files into /opt/app-root
 # COPY ./<builder_folder>/ /opt/app-root/
 
-# TODO: Copy the S2I scripts to /usr/local/s2i, since openshift/base-centos7 image sets io.openshift.s2i.scripts-url label that way, or update that label
 COPY ./.s2i/bin/ ${STI_SCRIPTS_PATH}
 
 # TODO: Drop the root user and make the content of /opt/app-root owned by user 1001
