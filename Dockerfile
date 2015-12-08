@@ -20,9 +20,7 @@ RUN yum install -y --setopt=tsflags=nodocs \
  && curl -Lo /usr/bin/lein $LEININGEN_INSTALLER_URL \
  && chmod +x /usr/bin/lein
 
-# TODO (optional): Copy the builder files into /opt/app-root
-# COPY ./<builder_folder>/ /opt/app-root/
-
+COPY ./contrib/ /opt/app-root
 COPY ./.s2i/bin/ ${STI_SCRIPTS_PATH}
 
 # TODO: Drop the root user and make the content of /opt/app-root owned by user 1001
